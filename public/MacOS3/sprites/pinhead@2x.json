@@ -1,4 +1,46 @@
 {
+  "default_1": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 18,
+    "x": 700,
+    "y": 200
+  },
+  "default_2": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 25,
+    "x": 700,
+    "y": 200
+  },
+  "default_3": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 32,
+    "x": 700,
+    "y": 200
+  },
+  "default_4": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 39,
+    "x": 700,
+    "y": 200
+  },
+  "default_5": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 45,
+    "x": 700,
+    "y": 200
+  },
+  "default_6": {
+    "height": 18,
+    "pixelRatio": 1,
+    "width": 50,
+    "x": 700,
+    "y": 200
+  },
   "a_frame_sidewall_tent": {
     "height": 15,
     "pixelRatio": 1,
@@ -4030,13 +4072,6 @@
     "width": 15,
     "x": 240,
     "y": 450
-  },
-  "gate": {
-    "height": 15,
-    "pixelRatio": 1,
-    "width": 15,
-    "x": 240,
-    "y": 465
   },
   "gate_tall": {
     "height": 15,

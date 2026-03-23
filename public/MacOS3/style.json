@@ -1265,7 +1265,6 @@
       "source": "openmaptiles",
       "source-layer": "building",
       "minzoom": 13,
-      "maxzoom": 14,
       "paint": {"fill-color": "#bbbbbb", "fill-outline-color": "#000000"}
     },
     {
