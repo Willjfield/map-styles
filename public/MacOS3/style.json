@@ -20,7 +20,7 @@
       "type": "raster"
     }
   },
-  "sprite": "{host}/{style_name}/sprites/osm-liberty",
+  "sprite": "{host}/{style_name}/sprites/pinhead",
   "glyphs": "{host}/{style_name}/fonts/{fontstack}/{range}.pbf",
   "layers": [
     {
@@ -917,7 +917,7 @@
       "source-layer": "transportation",
       "minzoom": 16,
       "filter": ["==", "oneway", 1],
-      "layout": {"icon-image": "arrow", "symbol-placement": "line"}
+      "layout": {"icon-image": "arrow", "icon-size": 0.5, "symbol-placement": "line"}
     },
     {
       "id": "road_one_way_arrow_opposite",
@@ -928,6 +928,7 @@
       "filter": ["==", "oneway", -1],
       "layout": {
         "icon-image": "arrow",
+        "icon-size": 0.5,
         "symbol-placement": "line",
         "icon-rotate": 180
       }
