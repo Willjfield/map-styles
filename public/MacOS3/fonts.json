@@ -1,0 +1,26 @@
+[
+  {
+    "name": "ChicagoFLF",
+    "sources": [
+      "ChicagoFLF.ttf"
+    ]
+  },
+  {
+    "name": "ChicagoPix",
+    "sources": [
+      "pixChicago.ttf"
+    ]
+  },
+  {
+    "name": "Geneva",
+    "sources": [
+      "geneva_9.ttf"
+    ]
+  },
+  {
+    "name": "Monaco",
+    "sources": [
+      "monaco.ttf"
+    ]
+  }
+]

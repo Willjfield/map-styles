@@ -1,0 +1,148 @@
+Style updated. Layers changed:
+• aeroway_fill: paint.fill-color
+• aeroway_runway: paint.line-color
+• aeroway_taxiway: paint.line-color
+• background: paint.background-color
+• boundary_2_z0-4: paint.line-color
+• boundary_2_z5-: paint.line-color
+• boundary_3: paint.line-color
+• bridge_link: paint.line-color
+• bridge_link_casing: paint.line-color
+• bridge_major_rail: paint.line-color
+• bridge_major_rail_hatching: paint.line-color
+• bridge_motorway: paint.line-color
+• bridge_motorway_casing: paint.line-color
+• bridge_motorway_link: paint.line-color
+• bridge_motorway_link_casing: paint.line-color
+• bridge_path_pedestrian: paint.line-color
+• bridge_path_pedestrian_casing: paint.line-color
+• bridge_secondary_tertiary: paint.line-color
+• bridge_secondary_tertiary_casing: paint.line-color
+• bridge_service_track: paint.line-color
+• bridge_service_track_casing: paint.line-color
+• bridge_street: paint.line-color
+• bridge_street_casing: paint.line-color
+• bridge_transit_rail: paint.line-color
+• bridge_transit_rail_hatching: paint.line-color
+• bridge_trunk_primary: paint.line-color
+• bridge_trunk_primary_casing: paint.line-color
+• building: paint.fill-color, paint.fill-outline-color
+• building-3d: paint.fill-extrusion-color
+• continent: paint.text-color, paint.text-halo-color, layout.text-font
+• country_1: paint.text-color, paint.text-halo-color, layout.text-font
+• country_2: paint.text-color, paint.text-halo-color, layout.text-font
+• country_3: paint.text-color, paint.text-halo-color, layout.text-font
+• landcover_grass: paint.fill-color, paint.fill-opacity
+• landcover_ice: paint.fill-color
+• landcover_sand: paint.fill-color
+• landcover_wood: paint.fill-color, paint.fill-opacity
+• landuse_cemetery: paint.fill-color
+• landuse_hospital: paint.fill-color
+• landuse_pitch: paint.fill-color
+• landuse_residential: paint.fill-color
+• landuse_school: paint.fill-color
+• landuse_track: paint.fill-color
+• natural_earth: paint.raster-opacity
+• park: paint.fill-color, paint.fill-opacity, paint.fill-outline-color
+• park_outline: paint.line-color
+• place_city: paint.text-color, paint.text-halo-color, layout.text-font
+• place_other: paint.text-color, paint.text-halo-color, layout.text-font
+• place_town: paint.text-color, paint.text-halo-color, layout.text-font
+• place_village: paint.text-color, paint.text-halo-color, layout.text-font
+• poi_transit: paint.text-color, paint.text-halo-color
+• poi_z14: paint.text-color, paint.text-halo-color
+• poi_z15: paint.text-color, paint.text-halo-color
+• poi_z16: paint.text-color, paint.text-halo-color
+• road_label: paint.text-color, paint.text-halo-width, paint.text-halo-color
+• road_link: paint.line-color
+• road_link_casing: paint.line-color
+• road_major_rail: paint.line-color
+• road_major_rail_hatching: paint.line-color
+• road_minor: paint.line-color
+• road_minor_casing: paint.line-color
+• road_motorway: paint.line-color
+• road_motorway_casing: paint.line-color
+• road_motorway_link: paint.line-color
+• road_motorway_link_casing: paint.line-color
+• road_path_pedestrian: paint.line-color
+• road_secondary_tertiary: paint.line-color
+• road_secondary_tertiary_casing: paint.line-color
+• road_service_track: paint.line-color
+• road_service_track_casing: paint.line-color
+• road_transit_rail: paint.line-color
+• road_transit_rail_hatching: paint.line-color
+• road_trunk_primary: paint.line-color
+• road_trunk_primary_casing: paint.line-color
+• state: paint.text-color, paint.text-halo-color, layout.text-font
+• tunnel_link: paint.line-color
+• tunnel_link_casing: paint.line-color
+• tunnel_major_rail: paint.line-color
+• tunnel_major_rail_hatching: paint.line-color
+• tunnel_minor: paint.line-color
+• tunnel_motorway: paint.line-color
+• tunnel_motorway_casing: paint.line-color
+• tunnel_motorway_link: paint.line-color
+• tunnel_motorway_link_casing: paint.line-color
+• tunnel_path_pedestrian: paint.line-color
+• tunnel_secondary_tertiary: paint.line-color
+• tunnel_secondary_tertiary_casing: paint.line-color
+• tunnel_service_track: paint.line-color
+• tunnel_service_track_casing: paint.line-color
+• tunnel_street_casing: paint.line-color
+• tunnel_transit_rail: paint.line-color
+• tunnel_transit_rail_hatching: paint.line-color
+• tunnel_trunk_primary: paint.line-color
+• tunnel_trunk_primary_casing: paint.line-color
+• water: paint.fill-color
+• water_name_line: paint.text-color, paint.text-halo-color, paint.text-halo-width, layout.text-font
+• water_name_point: paint.text-color, paint.text-halo-color, paint.text-halo-width
+• waterway_other: paint.line-color
+• waterway_river: paint.line-color
+• waterway_tunnel: paint.line-color
+
+Accessibility:
+
+NEGATIVE
+
+This change set contains several improvements but is ultimately net negative for accessibility due to critical failures in a few areas that would substantially impair usability for many users.
+
+---
+
+## What Improves
+
+**Text contrast (most labels):** Moving place, POI, road, country, state, and continent text colors to `#000000` on a white (`#ffffff`) background is a clear improvement. Pure black on white achieves a contrast ratio of 21:1, well above the **WCAG 2.1 SC 1.4.3 Contrast (Minimum)** threshold of 4.5:1 for normal text and 3:1 for large text (https://www.w3.org/TR/WCAG21/#contrast-minimum).
+
+**Text halo opacity:** Increasing halo opacity from 0.7–0.8 to 0.9 for most labels slightly improves the protective buffer around text, which helps legibility over varied backgrounds. This supports the intent of **WCAG 2.1 SC 1.4.3**.
+
+**Road label halo:** Adding a halo (`rgba(255,255,255,0.9)`) where previously there was none, and increasing halo width from 1 to 1.5, is a clear improvement. The prior state had no halo at all, meaning dark road label text competed directly with line colors beneath it. This change aids readability per **WCAG 2.1 SC 1.4.3** and general cartographic legibility practice.
+
+---
+
+## Critical Failures
+
+### 1. Water labels lose all legibility — severe contrast failure
+
+**water_name_line and water_name_point:**
+- Text color: `#5d60be` → `#ffffff` (white)
+- Halo color: `rgba(255,255,255,0.7)` → `rgba(0,0,0,0)` (fully transparent — halo removed)
+- Halo width: `1` → `0`
+
+Water is now `#555555`. White text (`#ffffff`) on `#555555` yields a contrast ratio of approximately **4.6:1**, which barely passes **WCAG 2.1 SC 1.4.3** in isolation. However, the halo has been **completely removed** (opacity 0, width 0). Without a halo, water labels render directly over the water fill with no protective buffer. At tile boundaries or near coastlines, labels will partially render over the white background (`#ffffff`), where white-on-white is **1:1 contrast — a complete failure**.
+
+The previous design (`#5d60be` text with a white halo on light-blue `#a0c8f0` water) was more robust: the halo ensured legibility regardless of what the text overlapped.
+
+**Guideline:** WCAG 2.1 SC 1.4.3 Contrast (Minimum); also relevant is **W3C WAI – Understanding SC 1.4.3** which notes that text must meet contrast requirements against all backgrounds it may appear over (https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum).
+
+**Alternatives:**
+- Keep water label text as dark (`#000000` or `#1a1a1a`) with a semi-opaque white halo (`rgba(255,255,255,0.85)`, width 1.5) so it remains legible over the dark water and any adjacent background.
+- Or retain a colored text (e.g., a dark navy `#1a237e`) with a white halo of width ≥ 1, which was the prior approach and is conventional for hydrographic labels in cartographic practice.
+
+---
+
+### 2. Water color change removes semantic differentiation — functional accessibility regression
+
+Water: `rgb(158,189,255)` → `#555555` (dark gray)
+
+This is a dramatic desaturation. Water is now the **same neutral gray family as roads, buildings, and rail**. For users with **color vision deficiency (CVD)**, particularly deuteranopia or protanopia, color is already a limited channel. Stripping the blue hue from water removes one of the most universally recognizable map conventions — blue = water — that even color-blind users typically rely on because blue-yellow discrimination is largely preserved across most CVD types.
+
+**Guideline:** **W3C WAI – Cognitive Accessibility**
