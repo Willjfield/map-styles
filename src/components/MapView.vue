@@ -25,6 +25,7 @@ function applyCamera(def: MapStyleDefinition) {
 function loadStyle(def: MapStyleDefinition) {
   if (!map) return
   const url = styleJsonUrl(def.publicFolder)
+
   map.setStyle(url, {
     transformStyle: styleTransformForFolder(def.publicFolder),
   })

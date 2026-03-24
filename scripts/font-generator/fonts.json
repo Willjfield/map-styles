@@ -18,6 +18,12 @@
     ]
   },
   {
+    "name": "Lugoj",
+    "sources": [
+      "Lugoj.otf"
+    ]
+  },
+  {
     "name": "Propaniac",
     "sources": [
       "Propaniac.otf"
