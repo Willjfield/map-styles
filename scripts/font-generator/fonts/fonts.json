@@ -1,0 +1,22 @@
+[
+  {
+    "name": "HillHouse",
+    "sources": [
+      "HillHouseMedium-axBgg.otf"
+    ]
+  },
+  {
+    "name": "Nouveau",
+    "sources": [
+      "NouveauRegular-9BAy.ttf"
+    ]
+  },
+  {
+    "name": "StrongGlasgow",
+    "sources": [
+      "StrongGlasgowRegular-ypAZ.ttf",
+      "StrongGlasgowDemoBold-562j.ttf",
+      "StrongGlasgowDemoLight-66vv.ttf"
+    ]
+  }
+]

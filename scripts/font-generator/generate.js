@@ -6,27 +6,96 @@ var fontnik = require('fontnik'),
 
 var DEBUG = false;
 
-var outputDir = '_output';
+/** Script directory — not process.cwd(), so `node generate.js` works from anywhere */
+var rootDir = __dirname;
+var outputDirAbs = path.join(rootDir, '_output');
 
 var sizeSumTotal = 0;
 
-if (!fs.existsSync(outputDir)) {
-  fs.mkdirSync(outputDir);
+if (!fs.existsSync(outputDirAbs)) {
+  fs.mkdirSync(outputDirAbs);
+}
+
+var SKIP_DIRS = new Set(['node_modules', '_output', '.git']);
+
+function filterCommentedSources(fonts) {
+  fonts.forEach(function(font) {
+    font.sources = font.sources.filter(function(f) {
+      return f.indexOf('//') === -1;
+    });
+  });
+}
+
+function loadFontsJson(fontsJsonPath) {
+  if (!fs.existsSync(fontsJsonPath)) {
+    return null;
+  }
+  var raw = fs.readFileSync(fontsJsonPath, 'utf8');
+  var fonts = JSON.parse(raw);
+  if (!Array.isArray(fonts)) {
+    return null;
+  }
+  filterCommentedSources(fonts);
+  return fonts;
+}
+
+function readFontSource(dir, familyName, sourceName) {
+  var candidates = [
+    path.join(dir, sourceName),
+    path.join(dir, familyName, sourceName),
+  ];
+  for (var i = 0; i < candidates.length; i++) {
+    try {
+      return fs.readFileSync(candidates[i]);
+    } catch (e) {}
+  }
+  return null;
+}
+
+function autoDiscoverFonts(dir) {
+  var fonts = [];
+  fs.readdirSync(dir).forEach(function(file) {
+    var ext = path.extname(file);
+    if (ext === '.ttf' || ext === '.otf') {
+      var rex = /([A-Z])([A-Z])([a-z])|([a-z])([A-Z])/g;
+      fonts.push({
+        name: path.basename(file).slice(0, -4).replace('-', '').replace(rex, '$1$4 $2$3$5'),
+        sources: [path.basename(file)]
+      });
+    }
+  });
+  return fonts;
 }
 
 var doFonts = function(dir, fonts) {
   var makeGlyphs = function(config) {
     var sourceFonts = {};
 
-    var folderName = outputDir + '/' + config.name;
-
+    var folderName = path.join(outputDirAbs, config.name);
+    console.log(folderName);
     config.sources.forEach(function(sourceName) {
       if (!sourceFonts[sourceName]) {
-        try {
-          sourceFonts[sourceName] = fs.readFileSync(dir + '/' + sourceName);
-        } catch (e) {}
+        var buf = readFontSource(dir, config.name, sourceName);
+        if (buf) {
+          sourceFonts[sourceName] = buf;
+        }
       }
     });
+
+    var missing = config.sources.filter(function(name) {
+      return !sourceFonts[name];
+    });
+    if (missing.length === config.sources.length) {
+      console.log(
+        '[%s] Skipping — add .otf/.ttf to the batch folder (see fonts.json "sources"):\n' +
+        '  %s  OR  %s/<file>',
+        config.name,
+        path.join(dir, missing[0]),
+        path.join(dir, config.name)
+      );
+      console.log('  Missing: %s', missing.join(', '));
+      return Promise.resolve();
+    }
 
     if (!fs.existsSync(folderName)) {
       fs.mkdirSync(folderName);
@@ -58,14 +127,20 @@ var doFonts = function(dir, fonts) {
         });
       })).then(function(results) {
         results = results.filter(function(r) {return !!r;});
+        if (!results.length) {
+          return;
+        }
         var combined = glyphCompose.combine(results);
+        if (!combined || !combined.length) {
+          return;
+        }
         var size = combined.length;
         sizeSum += size;
         histogram[start / 256] = size;
         if (DEBUG) {
           console.log('[%s] Range %s-%s size %s B', config.name, start, end, size);
         }
-        fs.writeFileSync(folderName + '/' + start + '-' + end + '.pbf', combined);
+        fs.writeFileSync(path.join(folderName, start + '-' + end + '.pbf'), combined);
       });
     };
 
@@ -97,7 +172,6 @@ var doFonts = function(dir, fonts) {
     });
   };
 
-  // would be much faster in parallel, but this is better for logging
   return fonts.reduce(function(p, font) {
       return p.then(function() {
         return makeGlyphs(font);
@@ -107,39 +181,35 @@ var doFonts = function(dir, fonts) {
 };
 
 var todo = [];
-fs.readdirSync('.').forEach(function(dir) {
-  if (fs.lstatSync(dir).isDirectory()) {
-    var fonts;
-    try {
-      fonts = require(path.resolve(__dirname, dir, 'fonts.json'));
-      fonts.forEach(function(font) {
-        font.sources = font.sources.filter(function(f) {
-          // skip sources starting with '//' -- these are "commented"
-          return f.indexOf('//') === -1;
-        });
-      });
-    } catch (e) {
-      fonts = [];
-      fs.readdirSync(dir).forEach(function(file) {
-        if (path.extname(file) == '.ttf' || path.extname(file) == '.otf') {
-          // compatible font name generation with genfontgl
-          var rex = /([A-Z])([A-Z])([a-z])|([a-z])([A-Z])/g;
-          fonts.push({
-            name: path.basename(file).slice(0, -4).replace('-','').replace(rex, '$1$4 $2$3$5'),
-            sources: [
-              path.basename(file)
-            ]
-          });
-        }
-      });
-    }
-    if (fonts && fonts.length) {
-      todo.push([dir, fonts]);
-    }
+
+var rootFonts = loadFontsJson(path.join(rootDir, 'fonts.json'));
+if (rootFonts && rootFonts.length) {
+  todo.push([rootDir, rootFonts]);
+}
+
+fs.readdirSync(rootDir).forEach(function(name) {
+  if (SKIP_DIRS.has(name)) {
+    return;
+  }
+  var full = path.join(rootDir, name);
+  if (!fs.statSync(full).isDirectory()) {
+    return;
+  }
+
+  var fonts = loadFontsJson(path.join(full, 'fonts.json'));
+  if (!fonts || !fonts.length) {
+    fonts = autoDiscoverFonts(full);
+  }
+  if (fonts && fonts.length) {
+    todo.push([full, fonts]);
   }
 });
 
-// would be much faster in parallel, but this is better for logging
+if (!todo.length) {
+  console.log('No fonts.json or .ttf/.otf batches found under %s', rootDir);
+  process.exit(1);
+}
+
 todo.reduce(function(p, pair) {
     return p.then(function() {
       console.log('Directory [%s]:', pair[0]);

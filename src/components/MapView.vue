@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import maplibregl from 'maplibre-gl'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import type { MapLike } from '../postprocessing'
+
 import {
   MAP_STYLES,
   styleById,
@@ -8,6 +11,12 @@ import {
   styleTransformForFolder,
   type MapStyleDefinition,
 } from '../config/mapStyles'
+import {
+  applyPostprocessingPreset,
+  createMapShaderPlugin,
+} from '../shaders'
+
+const plugin = createMapShaderPlugin(MAP_STYLES[0]?.id ?? '')
 
 const mapContainer = ref<HTMLDivElement | null>(null)
 const selectedId = ref<string>(MAP_STYLES[0]?.id ?? '')
@@ -32,6 +41,10 @@ function loadStyle(def: MapStyleDefinition) {
   map.once('style.load', () => applyCamera(def))
 }
 
+function syncPostprocessingToStyle(styleId: string) {
+  applyPostprocessingPreset(plugin, styleId)
+}
+
 onMounted(() => {
   const el = mapContainer.value
   const initial = styleById(selectedId.value) ?? MAP_STYLES[0]
@@ -44,6 +57,12 @@ onMounted(() => {
     hash: true,
   })
 
+  syncPostprocessingToStyle(initial.id)
+
+  map.once('load', () => {
+    if (map) plugin.attach(map as unknown as MapLike)
+  })
+
   map.setStyle(styleJsonUrl(initial.publicFolder), {
     transformStyle: styleTransformForFolder(initial.publicFolder),
   })
@@ -52,6 +71,7 @@ onMounted(() => {
 watch(selectedId, (id) => {
   const def = styleById(id)
   if (!def || !map) return
+  syncPostprocessingToStyle(id)
   loadStyle(def)
 })
 
