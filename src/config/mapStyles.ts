@@ -31,6 +31,13 @@ export const MAP_STYLES: readonly MapStyleDefinition[] = [
     center: [9.55,44.71],
     zoom: 4.5,
   },
+  {
+    id: 'mackintosh',
+    label: 'Mackintosh',
+    publicFolder: 'Mackintosh',
+    center: [-4.2518,55.8653],
+    zoom: 11,
+  },
 ]
 
 /** URL to a style JSON, respecting Vite `base` when deployed under a subpath */

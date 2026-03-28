@@ -24,11 +24,11 @@ let map: maplibregl.Map | null = null
 
 function applyCamera(def: MapStyleDefinition) {
   if (!map) return
-  map.flyTo({
-    center: def.center,
-    zoom: def.zoom,
-    essential: true,
-  })
+  // map.flyTo({
+  //   center: def.center,
+  //   zoom: def.zoom,
+  //   essential: true,
+  // })
 }
 
 function loadStyle(def: MapStyleDefinition) {
@@ -54,7 +54,7 @@ onMounted(() => {
     container: el,
     center: initial.center,
     zoom: initial.zoom,
-    hash: true,
+    hash: true
   })
 
   syncPostprocessingToStyle(initial.id)

@@ -1,23 +1,26 @@
 import type { PostprocessingPlugin } from '../postprocessing'
 
 /**
- * Map style ids (`MAP_STYLES[].id`) that use the pixelate pass.
- * Memphis and any style not listed here get no pixelation.
+ * Which postprocessing pass ids are enabled per map style (`MAP_STYLES[].id`).
+ * Pass ids must exist on `createMapShaderPlugin` (see KNOWN_PASS_IDS).
  */
-export const STYLE_IDS_WITH_PIXELATE = new Set<string>(['macos3'])
+export const STYLE_POSTPASSES: Readonly<Record<string, readonly string[]>> = {
+  macos3: ['pixelate'],
+  mackintosh: ['bloom'],
+  memphis: [],
+}
 
 /** Every pass id registered in `createMapShaderPlugin` — used to toggle off unused passes */
-export const KNOWN_PASS_IDS = ['pixelate'] as const
+export const KNOWN_PASS_IDS = ['pixelate', 'bloom'] as const
 
 export type KnownPassId = (typeof KNOWN_PASS_IDS)[number]
 
 export function getPostprocessingPreset(styleId: string): {
   enabledPassIds: readonly string[]
 } {
-  const enabledPassIds = STYLE_IDS_WITH_PIXELATE.has(styleId)
-    ? (['pixelate'] as const)
-    : ([] as const)
-  return { enabledPassIds }
+  return {
+    enabledPassIds: STYLE_POSTPASSES[styleId] ?? [],
+  }
 }
 
 export function applyPostprocessingPreset(
